@@ -4,9 +4,6 @@ from dash import html, dcc, callback, Output, Input, State
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objs as go
-import dash_daq as daq
-from urllib.request import urlopen
-import json
 
 df = pd.read_excel("irio_bersih untuk latihan.xlsx",sheet_name="Untuk Dashboard")
 
@@ -15,10 +12,6 @@ sector = df['Kategori'].unique()
 
 columns = ["Income Multiplier","Output Multiplier"]
 variabel = df.loc[:,columns].columns
-
-# Geojson
-with urlopen('https://github.com/superpikar/indonesia-geojson/blob/master/indonesia-edit.geojson?raw=true') as response:
-    ind = json.load(response)
 
 dash.register_page(__name__,path='/multiplier')
 

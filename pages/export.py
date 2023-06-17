@@ -4,7 +4,6 @@ from dash import html, dcc, callback, Output, Input, State
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objs as go
-import dash_daq as daq
 from urllib.request import urlopen
 import json
 

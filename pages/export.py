@@ -99,9 +99,7 @@ content = html.Div([
                                                     clickData={'points': [{'location': 'Nusa Tenggara Timur'}]}),
                                             html.I(className='fa-solid fa-angles-right fa-beat-fade fa-2xl',style={'margin-top':'18%',
                                                                                                                   'margin-left':'3%',
-                                                                                                                  'size':'120%'}),
-                                            html.I(className='fa-solid fa-arrow-trend-down fa-beat-fade fa-2xl',style={'color':'#ffffff','margin-top':'30%',
-                                                                                                         'margin-left':'3%'})
+                                                                                                                  'size':'120%'})
                                             ],style={'display':'flex','width':'70vw','color':'#f2f2f2'}),
 
                                     html.Div([

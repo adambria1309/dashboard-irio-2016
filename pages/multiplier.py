@@ -4,6 +4,7 @@ from dash import html, dcc, callback, Output, Input, State
 import dash_bootstrap_components as dbc
 import plotly.express as px
 import plotly.graph_objs as go
+import numpy as np
 
 df = pd.read_excel("irio_bersih untuk latihan.xlsx",sheet_name="Untuk Dashboard")
 
@@ -25,11 +26,18 @@ content = html.Div([
                                 dbc.Col(dbc.NavbarBrand("DASHBOARD IRIO 2016", className="ms-xxl",style={'font-weight':'bold'})),
                                 dbc.Col(
                                     html.Div([
+                                        dcc.Dropdown(options=[{'label': i, 'value': i} for i in variabel],
+                                            placeholder="Pilih Variabel", value="Output Multiplier",style={'width':'100%'},
+                                            id='variable-selection-1',clearable=False,searchable=False)
+                                            ],style={'display':'flex','width':'600%','margin-left':'200%'})
+                                        ),
+                                dbc.Col(
+                                    html.Div([
                                         dcc.Dropdown(options=[{'label': i, 'value': i} for i in sector],
                                             style={'width':'100%'},
                                             placeholder="Pilih Sektor", value="Industri Pengolahan",
                                             id='sector-selection-1',clearable=False,searchable=False)
-                                            ],style={'width':'600%','display':'flex','margin-left':'200%'})
+                                            ],style={'width':'600%','display':'flex','margin-left':'800%'})
                                         )
                             ],
                             align="center",
@@ -41,37 +49,70 @@ content = html.Div([
             dark=True,
             className="sticky-top"
             ),
+   
+    html.Div(
+                [
+                    dbc.Button(
+                        "Penting!",
+                        id="alert-toggle-fade-1",
+                        className="me-1",
+                        n_clicks=0,
+                    ),
+                    dbc.Alert(
+                        "Untuk memilih provinsi silahkan click pada salah satu batang bar cahrt.",
+                        id="alert-fade-1",
+                        dismissable=True,
+                        is_open=True,style={'margin-right':'5%'}
+                    ),
+                ],style={'display':'flex','margin-top':'1%','margin-left':'8%'}
+            ),
 
     html.Div([
         html.Div([
-            dcc.Graph(
-                id='crossfilter-income-output',
-                style={'height':'98%','margin-top':'1%'},
-                clickData={'points': [{'customdata': 'Nusa Tenggara Timur'}]}
+            dcc.Graph(figure = {},
+                      id='crossfilter-income-output',style={'height':'95vh','width':'40vw','margin-top':'1%'},
+                      clickData={'points': [{'customdata': 'Nusa Tenggara Timur'}]}
             )
-        ], style={'margin-bottom':'1%','width': '50%','height':'100vh', 'padding': '0','background':'#ffffff','border-radius':'8px'}),
+        ], style={'margin-bottom':'1%','height': '97vh','width':'42vw', 'padding': '0','background':'#ffffff','border-radius':'8px'}),
         html.Div([
-            html.Div([dcc.Graph(id='top-5-income',style={'padding':'0','height':'95%','margin-top':'1%','margin-left':'1%','margin-right':'1%'})],style={'width': '50%','background':'#ffffff','border-radius':'8px','margin-bottom':'2%'}),
-            html.Div([dcc.Graph(id='top-5-output',style={'padding':'0','height':'95%','margin-top':'1%','margin-left':'1%','margin-right':'1%'})],style={'width': '50%','background':'#ffffff','border-radius':'8px','margin-bottom':'2%'})            
-        ], style={'display': 'grid', 'width': '50%','margin-left':'5%'})
-    ],style={'margin-left':'8%','margin-top':'3%','margin-bottom':'1%','display':'flex'})
+            html.Div([dcc.Graph(figure = {},id='top-5-income',style={'padding':'0','height':'44vh','width':'23vw','margin-top':'2%','margin-left':'1%','margin-right':'1%'})],
+                     style={'height': '46vh','width':'24vw','background':'#ffffff','border-radius':'8px','margin-bottom':'2%'}),
+            html.Div([dcc.Graph(figure = {},id='top-5-output',style={'padding':'0','height':'44vh','width':'23vw','margin-top':'2%','margin-left':'1%','margin-right':'1%'})],
+                     style={'height': '46vh','width':'24vw','background':'#ffffff','border-radius':'8px','margin-bottom':'2%'})            
+        ], style={'display': 'grid', 'height': '100vh','width':'25vw','margin-left':'5%'})
+    ],style={'margin-left':'8%','margin-top':'3%','margin-bottom':'1%','display':'flex','width':'100vw','height':'100vh'})
 ])
 
 layout = content
 
 @callback(
     Output('crossfilter-income-output', 'figure'),
-    Input('sector-selection-1', 'value'))
-def update_graph(value_sec):
+    Input('sector-selection-1', 'value'),
+    Input('variable-selection-1','value'))
+def update_graph(value_sec,value_var):
     dff = df[df['Kategori'] == value_sec]
-    fig = px.scatter(
-        dff,x='Income Multiplier',
-        y='Output Multiplier',
-        hover_name=dff['Provinsi'])
-    fig.update_traces(customdata=dff['Provinsi'])
-    fig.update_layout(margin={'l': 40, 'b': 40, 't': 40, 'r': 40}, hovermode='closest')
+    dff["Nilai Output Multiplier"] = np.where(dff['Output Multiplier'] >= 1.5,">= 1.5","< 1.5")
+    dff["Nilai Income Multiplier"] = np.where(dff['Income Multiplier'] >= 0.5,">= 0.5","< 0.5")
 
-    return fig
+
+    if (value_var=='Income Multiplier'):
+        fig = px.bar(dff, y='Provinsi', x=value_var,
+                     hover_data=[value_var, 'Output Multiplier'], color='Output Multiplier',
+                     labels={'pop':f'{value_var}'}, height=400,orientation='h')
+        fig.update_traces(customdata=dff['Provinsi'])
+        fig.update_layout(clickmode='event')
+        fig.update_layout(margin={'l': 40, 'b': 40, 't': 40, 'r': 40})
+
+        return fig
+    else:
+        fig = px.bar(dff, y='Provinsi', x=value_var,
+                     hover_data=[value_var, 'Income Multiplier'], color='Income Multiplier',
+                     labels={'pop':f'{value_var}'}, height=400,custom_data='Provinsi',orientation='h')
+        fig.update_traces(customdata=dff['Provinsi'])
+        fig.update_layout(clickmode='event')
+        fig.update_layout(margin={'l': 40, 'b': 40, 't': 40, 'r': 40})
+
+        return fig
 
 
 def create_pie_5(labels, values, title):
@@ -80,7 +121,7 @@ def create_pie_5(labels, values, title):
                                 #  textinfo='none',
                                  hoverinfo='percent+label',direction ='clockwise',
                                  sort=True,pull=[0.1, 0, 0, 0, 0],
-                                 texttemplate=[f'Top 1: {labels[0]}',f'Top 2: {labels[1]}',f'Top 3: {labels[2]}',f'Top 4: {labels[3]}',f'Top 5:cls {labels[4]}'])])
+                                 texttemplate=[f'Top 1: {labels[0]}',f'Top 2: {labels[1]}',f'Top 3: {labels[2]}',f'Top 4: {labels[3]}',f'Top 5: {labels[4]}'])])
     fig.update(layout_showlegend=False)
     fig.update_layout(font={'size':12},
                         font_family="Arial",
@@ -91,7 +132,7 @@ def create_pie_5(labels, values, title):
                        xref='paper', yref='paper', showarrow=False, align='left',
                        text=title)
 
-    fig.update_layout(height=225, margin={'l': 20, 'b': 0, 'r': 10, 't': 50})
+    fig.update_layout(height=225, margin={'l': 5, 'b': 0, 'r': 10, 't': 50})
 
     return fig
 
@@ -99,9 +140,10 @@ def create_pie_5(labels, values, title):
 @callback(
     Output('top-5-income', 'figure'),
     Input('crossfilter-income-output', 'clickData'))
-def update_y_timeseries(provinsi):
+def update_income_multiplier(provinsi):
     value_prov = provinsi['points'][0]['customdata']
-    fdf = df[df['Provinsi']==f'{value_prov}']
+
+    fdf = df[df['Provinsi']==value_prov]
     fdf = fdf.sort_values('Income Multiplier', ascending = False).head(5).reset_index()
 
     values = fdf['Income Multiplier'].values
@@ -114,9 +156,9 @@ def update_y_timeseries(provinsi):
 @callback(
     Output('top-5-output', 'figure'),
     Input('crossfilter-income-output', 'clickData'))
-def update_x_timeseries(provinsi):
+def update_output_multiplier(provinsi):
     value_prov = provinsi['points'][0]['customdata']
-    fdf = df[df['Provinsi']==f'{value_prov}']
+    fdf = df[df['Provinsi']==value_prov]
     fdf = fdf.sort_values('Output Multiplier', ascending = False).head(5).reset_index()
 
     values = fdf['Output Multiplier'].values
@@ -124,3 +166,13 @@ def update_x_timeseries(provinsi):
 
     title = '<b>{}</b><br>Top 5 Sektor Dengan Output Multiplier Tertinggi'.format(value_prov)
     return create_pie_5(labels, values, title)
+
+@callback(
+    Output("alert-fade-1", "is_open"),
+    [Input("alert-toggle-fade-1", "n_clicks")],
+    [State("alert-fade-1", "is_open")],
+)
+def toggle_alert(n, is_open):
+    if n:
+        return not is_open
+    return is_open

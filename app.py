@@ -14,8 +14,8 @@ sidebar = html.Div(
             [
                 # width: 3rem ensures the logo is the exact width of the
                 # collapsed sidebar (accounting for padding)
-                html.Img(src='./assets/profile.png', style={"width": "3rem"}),
-                html.H2("Wellcome!"),
+                html.I(className="fa-solid fa-face-smile me-5 fa-2xl",style={'color':'#0062ff','margin-left':'10px'}),
+                html.H2("Wellcome!",style={'color':'#0062ff','margin-left':'-10%'}),
             ],
             className="sidebar-header",
         ),

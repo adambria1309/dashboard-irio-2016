@@ -77,6 +77,7 @@ content = html.Div([
                                     id="alert-fade",
                                     dismissable=True,
                                     is_open=True,
+                                    style={'margin-right':'5%'}
                                 ),
                             ],style={'display':'flex','margin-top':'1%'}
                         ),
@@ -97,10 +98,10 @@ content = html.Div([
                                                         'padding':'0'},
                                                     clickData={'points': [{'location': 'Nusa Tenggara Timur'}]}),
                                             html.I(className='fa-solid fa-angles-right fa-beat-fade fa-2xl',style={'margin-top':'18%',
-                                                                                                                  'margin-left':'5%',
+                                                                                                                  'margin-left':'3%',
                                                                                                                   'size':'120%'}),
-                                            html.I(className='fa-solid fa-arrow-trend-down fa-beat-fade fa-2xl',style={'color':'#ffffff','margin-top':'34%',
-                                                                                                         'margin-left':'-4%'})
+                                            html.I(className='fa-solid fa-arrow-trend-down fa-beat-fade fa-2xl',style={'color':'#ffffff','margin-top':'30%',
+                                                                                                         'margin-left':'3%'})
                                             ],style={'display':'flex','width':'70vw','color':'#f2f2f2'}),
 
                                     html.Div([
@@ -198,6 +199,8 @@ def upate_figure(value_var,value_sec):
                 font={'size': 12},
                 margin=dict(t=40, b=80, l=80, r=40)
                 )
+            
+            fig1.update_layout(clickmode='event+select')
     return fig1
 
 @callback(

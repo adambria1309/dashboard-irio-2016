@@ -9,7 +9,7 @@ app = Dash(__name__,
 server = app.server
 
 sidebar = html.Div(
-    [
+    [   
         html.Div(
             [
                 # width: 3rem ensures the logo is the exact width of the
@@ -41,8 +41,9 @@ sidebar = html.Div(
 )
 
 app.layout = html.Div([
-    sidebar,
-    dash.page_container,
+    dbc.Spinner(children=[
+        sidebar,
+        dash.page_container],color="primary",fullscreen=True,size='md'),
 ],className='page',style={'background-image':'linear-gradient( 108.7deg,  rgba(221,22,224,1) 11%, rgba(111,22,190,1) 88.2% )','width':'100%','height':'100%'})
 
 if __name__== '__main__':

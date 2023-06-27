@@ -28,6 +28,7 @@ with urlopen('https://github.com/superpikar/indonesia-geojson/blob/master/indone
 dash.register_page(__name__,path='/')
 
 content = html.Div([
+            
             dbc.Navbar(
                 dbc.Container(
                     [

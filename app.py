@@ -40,11 +40,13 @@ sidebar = html.Div(
     className="sidebar",
 )
 
-app.layout = html.Div([
-    dbc.Spinner(children=[
-        sidebar,
-        dash.page_container],color="primary",fullscreen=True,size='md'),
-],className='page',style={'background-image':'linear-gradient( 108.7deg,  rgba(221,22,224,1) 11%, rgba(111,22,190,1) 88.2% )','width':'100%','height':'100%'})
+app.layout = dbc.Spinner([
+    html.Div([
+    sidebar,
+    dash.page_container,
+    ],className='page',style={'background-image':'linear-gradient( 108.7deg,  rgba(221,22,224,1) 11%, rgba(111,22,190,1) 88.2% )','width':'100%','height':'100%'})
+],color="primary",fullscreen=True,size='md')
+
 
 if __name__== '__main__':
     app.run_server(debug=True)

@@ -83,7 +83,7 @@ content = html.Div([
     ],style={'margin-left':'8%','margin-top':'3%','margin-bottom':'1%','display':'flex','width':'100vw','height':'100vh'})
 ])
 
-layout = content
+layout = dbc.Spinner([content],color="primary",fullscreen=True,size='md')
 
 @callback(
     Output('crossfilter-income-output', 'figure'),

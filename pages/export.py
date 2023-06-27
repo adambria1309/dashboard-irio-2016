@@ -153,7 +153,7 @@ content = html.Div([
         ])
 
 
-layout = content
+layout = dbc.Spinner([content],color="primary",fullscreen=True,size='md')
 
 @callback(
         Output('provinsi-container','children'),

@@ -70,15 +70,15 @@ content = html.Div([
     html.Div([
         html.Div([
             dcc.Graph(figure = {},
-                      id='crossfilter-income-output',style={'height':'95vh','width':'40vw','margin-top':'1%'},
+                      id='crossfilter-income-output',style={'height':'95vh','width':'50vw','margin-top':'1%'},
                       clickData={'points': [{'customdata': 'Nusa Tenggara Timur'}]}
             )
-        ], style={'margin-bottom':'1%','height': '97vh','width':'42vw', 'padding': '0','background':'#ffffff','border-radius':'8px'}),
+        ], style={'margin-bottom':'1%','height': '97vh','width':'52vw', 'padding': '0','background':'#ffffff','border-radius':'8px'}),
         html.Div([
-            html.Div([dcc.Graph(figure = {},id='top-5-income',style={'padding':'0','height':'44vh','width':'23vw','margin-top':'2%','margin-left':'1%','margin-right':'1%'})],
-                     style={'height': '46vh','width':'24vw','background':'#ffffff','border-radius':'8px','margin-bottom':'2%'}),
-            html.Div([dcc.Graph(figure = {},id='top-5-output',style={'padding':'0','height':'44vh','width':'23vw','margin-top':'2%','margin-left':'1%','margin-right':'1%'})],
-                     style={'height': '46vh','width':'24vw','background':'#ffffff','border-radius':'8px','margin-bottom':'2%'})            
+            html.Div([dcc.Graph(figure = {},id='top-5-income',style={'padding':'0','height':'44vh','width':'28vw','margin-top':'2%','margin-left':'1%','margin-right':'1%'})],
+                     style={'height': '46vh','width':'30vw','background':'#ffffff','border-radius':'8px','margin-bottom':'2%'}),
+            html.Div([dcc.Graph(figure = {},id='top-5-output',style={'padding':'0','height':'44vh','width':'28vw','margin-top':'2%','margin-left':'1%','margin-right':'1%'})],
+                     style={'height': '46vh','width':'30vw','background':'#ffffff','border-radius':'8px','margin-bottom':'2%'})            
         ], style={'display': 'grid', 'height': '100vh','width':'25vw','margin-left':'5%'})
     ],style={'margin-left':'8%','margin-top':'3%','margin-bottom':'1%','display':'flex','width':'100vw','height':'100vh'})
 ])
@@ -98,19 +98,19 @@ def update_graph(value_sec,value_var):
     if (value_var=='Income Multiplier'):
         fig = px.bar(dff, y='Provinsi', x=value_var,
                      hover_data=[value_var, 'Output Multiplier'], color='Output Multiplier',
-                     labels={'pop':f'{value_var}'}, height=400,orientation='h')
+                     labels={'pop':f'{value_var}'},orientation='h')
         fig.update_traces(customdata=dff['Provinsi'])
         fig.update_layout(clickmode='event')
-        fig.update_layout(margin={'l': 40, 'b': 40, 't': 40, 'r': 40})
+        fig.update_layout(margin={'l': 40, 'b': 40, 't': 40, 'r': 0})
 
         return fig
     else:
         fig = px.bar(dff, y='Provinsi', x=value_var,
                      hover_data=[value_var, 'Income Multiplier'], color='Income Multiplier',
-                     labels={'pop':f'{value_var}'}, height=400,custom_data='Provinsi',orientation='h')
+                     labels={'pop':f'{value_var}'},custom_data='Provinsi',orientation='h')
         fig.update_traces(customdata=dff['Provinsi'])
         fig.update_layout(clickmode='event')
-        fig.update_layout(margin={'l': 40, 'b': 40, 't': 40, 'r': 40})
+        fig.update_layout(margin={'l': 40, 'b': 40, 't': 40, 'r': 0})
 
         return fig
 
@@ -124,15 +124,14 @@ def create_pie_5(labels, values, title):
                                  texttemplate=[f'Top 1: {labels[0]}',f'Top 2: {labels[1]}',f'Top 3: {labels[2]}',f'Top 4: {labels[3]}',f'Top 5: {labels[4]}'])])
     fig.update(layout_showlegend=False)
     fig.update_layout(font={'size':12},
-                        font_family="Arial",
-                        margin=dict(t=80, b=20, l=15, r=15)
+                        font_family="Arial"
                        )
 
-    fig.add_annotation(x=0, y=1, xanchor='left', yanchor='bottom',
+    fig.add_annotation(x=0, y=1.05, xanchor='left', yanchor='bottom',
                        xref='paper', yref='paper', showarrow=False, align='left',
                        text=title)
 
-    fig.update_layout(height=225, margin={'l': 5, 'b': 0, 'r': 10, 't': 50})
+    fig.update_layout(margin={'l': 5, 'b': 0, 'r': 10, 't': 50})
 
     return fig
 
